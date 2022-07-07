@@ -14,7 +14,8 @@ class CharacterListViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        fetchCharacter()
+        //fetchCharacter()
+        fetchDataWithAlamofire()
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -43,12 +44,31 @@ class CharacterListViewController: UICollectionViewController {
         }
     
     private func fetchCharacter() {
-        NetworkManager.shared.fetchCharacter(urlMain: urlName) { characters in
-            self.characters = characters
-            self.collectionView.reloadData()
+        NetworkManager.shared.fetchCharacter(urlMain: urlName) { result in
+            switch result {
+            case .success(let character):
+                self.characters = character
+                self.collectionView.reloadData()
+            case .failure(let error):
+                print(error)
+            }
+         
+        }
+    }
+    
+    private func fetchDataWithAlamofire() {
+        NetworkManager.shared.fetchCharacterWithAlamofire(urlMain: urlName) { result in
+            switch result {
+            case .success(let character):
+                self.characters = character
+                self.collectionView.reloadData()
+            case .failure(let error):
+                print(error)
+            }
         }
     }
 }
+
 
 extension CharacterListViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

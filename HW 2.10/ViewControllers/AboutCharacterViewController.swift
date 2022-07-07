@@ -26,12 +26,13 @@ class AboutCharacterViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         activityIndicator.startAnimating()
-        fetchImage()
+        // fetchImage()
+        fetchImageWithAlamofire()
         labelFilms.text = aboutPerson
         activityIndicator.hidesWhenStopped = true
     }
     
-    func fetchImage() {
+   private func fetchImage() {
         guard let picture = NetworkManager.shared.fetchImage(from: character.image ?? "") else { return }
         guard let image = UIImage(data: picture) else { return }
         
@@ -40,5 +41,16 @@ class AboutCharacterViewController: UIViewController {
             self.activityIndicator.stopAnimating()
         }
     }
+    
+    private func fetchImageWithAlamofire() {
+        NetworkManager.shared.fetchImageWithAlamofire(urlMain: character.image ?? "", completion: { imageData in
+            DispatchQueue.main.async {
+                self.imageView.image = UIImage(data: imageData)
+                self.activityIndicator.stopAnimating()
+                }
+            }
+        )
+    }
 }
+
 
